@@ -112,8 +112,8 @@ const gameBoard = (function () {
         (square) => square.position.number == 8
       );
 
-      const winConditionOne = number0Marked != -1 && number6Marked != -1 ? true : false;
-      const winConditionTwo = number2Marked != -1 && number8Marked != -1 ? true : false;
+      const winConditionOne = number0Marked != -1 && number8Marked != -1 ? true : false;
+      const winConditionTwo = number2Marked != -1 && number6Marked != -1 ? true : false;
 
       return winConditionOne || winConditionTwo ? true : false;
     }
@@ -156,6 +156,7 @@ const gameBoard = (function () {
     testWinConD2,
     testWinConC1,
     testWinConR1,
+    confirmDiagonalMarkedSquares,
   };
 })();
 
