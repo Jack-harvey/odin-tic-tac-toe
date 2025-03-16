@@ -86,14 +86,17 @@ const gameLogic = (function () {
 
 const evaluateWin = (function () {
   const NUMBEROFSQUARESTOWIN = 3;
+
   const evaluateWin = function (player, mark, gameBoard) {
     const isItTheLastTurn =
       gameBoard.findIndex((square) => square.mark == null) === -1
         ? true
         : false;
+
     const playersMarkedSquares = gameBoard.filter(
       (square) => square.mark == mark
     );
+
     if (
       playersMarkedSquares.findIndex(
         (square) => square.position.row == 2 && square.position.col == 2
@@ -109,7 +112,7 @@ const evaluateWin = (function () {
       );
 
       if (column1.length == 2 || column3.length == 2) {
-        //return wincon
+        return player
       }
     }
 
@@ -125,8 +128,19 @@ const evaluateWin = (function () {
         numberOfMarksInCol == NUMBEROFSQUARESTOWIN ||
         numberOfMarksInRow == NUMBEROFSQUARESTOWIN
       ) {
-        // return wincon
+        return player
       }
     }
+
+    return isItTheLastTurn ? 'draw' : 'noWinYet'
   };
+
+
+return evaluateWin();
+
+}
+
+
+
+
 })();
