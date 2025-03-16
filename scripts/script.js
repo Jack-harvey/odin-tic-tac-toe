@@ -87,22 +87,18 @@ const gameLogic = (function () {
 const evaluateWin = (function () {
   const NUMBEROFSQUARESTOWIN = 3;
   const evaluateWin = function (player, mark, gameBoard) {
-    //game board how many squares are null? if 0 then flag it
     const isItTheLastTurn =
       gameBoard.findIndex((square) => square.mark == null) === -1
         ? true
         : false;
-    //of the game board squares get the ones that match the player's token
     const playersMarkedSquares = gameBoard.filter(
       (square) => square.mark == mark
     );
-    //if the sq left is 2,2 one of them? if so eval a diagonal win
     if (
       playersMarkedSquares.findIndex(
         (square) => square.position.row == 2 && square.position.col == 2
       )
     ) {
-      //col 1 and col 3 as arrays check if we've got 1 and 3 in each
       const column1 = gameBoard.filer(
         (square) =>
           (square.position.col == 1 && square.row == 1) || square.row == 3
