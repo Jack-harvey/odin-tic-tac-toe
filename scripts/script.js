@@ -1,6 +1,6 @@
 function createPlayer(name, boardPiece) {
-  const turnNumber = 0;
-  const score = 0;
+  let turnNumber = 0;
+  let score = 0;
   const increaseTurnNumber = () => turnNumber++;
   const getTurnNumber = () => turnNumber;
   const increaseScore = () => score++;
@@ -97,7 +97,7 @@ const gameBoard = (function () {
     if (
       getAllSquaresWithDefinedMark.findIndex(
         (square) => square.position.row == 2 && square.position.col == 2
-      )
+      ) != -1
     ) {
       const number0Marked = getAllSquaresWithDefinedMark.findIndex(
         (square) => square.position.number == 0
@@ -116,6 +116,28 @@ const gameBoard = (function () {
       const winConditionTwo = number2Marked != -1 && number6Marked != -1 ? true : false;
 
       return winConditionOne || winConditionTwo ? true : false;
+    }
+    return false;
+  };
+
+  const confirmStraightMarkedSquares = (mark) => {
+    const NUMBEROFSQUARESTOWIN = 3;
+    const getAllSquaresWithDefinedMark = board.filter((square) => square.mark == mark);
+
+    for (let index = 1; index < 4; index++) {
+      let numberOfMarksInRow = getAllSquaresWithDefinedMark.filter(
+        (square) => square.position.row == index
+      );
+      let numberOfMarksInCol = getAllSquaresWithDefinedMark.filter(
+        (square) => square.position.col == index
+      );
+
+      if (
+        numberOfMarksInCol.length == NUMBEROFSQUARESTOWIN ||
+        numberOfMarksInRow.length == NUMBEROFSQUARESTOWIN
+      ) {
+        return true;
+      }
     }
     return false;
   };
@@ -157,50 +179,33 @@ const gameBoard = (function () {
     testWinConC1,
     testWinConR1,
     confirmDiagonalMarkedSquares,
+    confirmStraightMarkedSquares,
   };
 })();
 
-const evaluateWin = (function () {
-  const NUMBEROFSQUARESTOWIN = 3;
-
-  const evaluateWin = function (player, mark) {
+const game = (function () {
+  const evaluateWin = (player) => {
     const isItTheLastTurn = gameBoard.getNumberOfEmptySquares == 0 ? true : false;
+    const marker = player.boardPiece;
 
-    const playersMarkedSquares = gameBoard.getAllSquaresWithDefinedMark(mark);
-
-    if (
-      playersMarkedSquares.findIndex(
-        (square) => square.position.row == 2 && square.position.col == 2
-      )
-    ) {
-      const column1 = gameBoard.filer(
-        (square) => (square.position.col == 1 && square.row == 1) || square.row == 3
-      );
-      const column3 = gameBoard.filer(
-        (square) => (square.position.col == 3 && square.row == 1) || square.row == 3
-      );
-
-      if (column1.length == 2 || column3.length == 2) {
-        return player;
-      }
+    if (player.getTurnNumber() < 3) {
+      return "";
     }
 
-    for (let index = 1; index < 4; index++) {
-      let numberOfMarksInRow = gameBoard.filter((square) => square.position.row == index);
-      let numberOfMarksInCol = gameBoard.filter((square) => square.position.col == index);
-
-      if (
-        numberOfMarksInCol == NUMBEROFSQUARESTOWIN ||
-        numberOfMarksInRow == NUMBEROFSQUARESTOWIN
-      ) {
-        return player;
-      }
+    if (gameBoard.confirmDiagonalMarkedSquares(marker)) {
+      return "win";
     }
 
-    return isItTheLastTurn ? "draw" : "noWinYet";
+    if (gameBoard.confirmStraightMarkedSquares(marker)) {
+      return "win";
+    }
+
+    return isItTheLastTurn ? "draw" : "";
   };
 
-  return evaluateWin;
+  return {
+    evaluateWin,
+  };
 })();
 
 const opponentsMove = (function () {
@@ -218,20 +223,12 @@ const opponentsMove = (function () {
 })();
 
 function gameTest() {
-  // let playersGName = "Jack";
-  // let playersGMark = "X";
-  // let opponentsGMark = playersGMark == "O" ? "X" : "O";
-  // player1 = createPlayer(playersGName, playersGMark);
-  // player2 = createPlayer("player2", opponentsGMark);
-  // myGameBoard = gameBoard.create();
-  // let playersGChoice = Number(prompt("pick sq 0-8"));
-  // myGameBoard.find((square) => square.position.number == playersGChoice).mark =
-  //   playersGMark;
-  // let oppoTurn = opponentsMove;
-  // let opponentsGChoice = oppoTurn.pickASquare(myGameBoard);
-  // console.log(opponentsGChoice);
-  // myGameBoard.find((square) => square.position.number == playersGChoice).mark =
-  //   playersGMark;
+  const jack = createPlayer("jack", "x");
+  gameBoard.testWinConC1("x");
+  jack.increaseTurnNumber();
+  jack.increaseTurnNumber();
+  jack.increaseTurnNumber();
+  game.evaluateWin(jack);
 }
 
 gameTest();
