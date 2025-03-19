@@ -211,29 +211,45 @@ const gameController = (function () {
     currentPlayerTurn = players[0];
   };
 
-  const startPlayersTurn = (promptMessage = "Choose a sq from 0-8") => {
-    currentPlayerTurn = players[0];
-    playerOnesChoice = prompt(promptMessage);
-
-    if (!gameBoard.validateSquareIsFree(playerOnesChoice)) {
-      startPlayersTurn("That square is already taken");
+  const startTurn = (promptMessage = "Choose a sq from 0-8") => {
+    if (currentPlayerTurn == players[0]) {
+      playersChoice = prompt(promptMessage);
+    } else {
+      playersChoice = opponentController.opponentsMove();
     }
 
-    gameBoard.setMarker(playerOnesChoice, players[0].boardPiece);
-    let winResult = evaluateWin(players[0]);
+    if (!gameBoard.validateSquareIsFree(playersChoice)) {
+      startTurn("That square is already taken");
+    }
+
+    gameBoard.setMarker(playersChoice, currentPlayerTurn.boardPiece);
+    let winResult = evaluateWin(currentPlayerTurn);
     evaluateGameEnd(winResult);
   };
 
-  const startOpponentsTurn = () => {
-    currentPlayerTurn = players[1];
-    playerTwosChoice = opponentController.opponentsMove();
-    if (!gameBoard.validateSquareIsFree(playerTwosChoice)) {
-      startPlayersTurn("That square is already taken");
-    }
-    gameBoard.setMarker(playerTwosChoice, players[1].boardPiece);
-    let winResult = evaluateWin(players[1]);
-    evaluateGameEnd(winResult);
-  };
+  // const startPlayersTurn = (promptMessage = "Choose a sq from 0-8") => {
+  //   currentPlayerTurn = players[0];
+  //   playerOnesChoice = prompt(promptMessage);
+
+  //   if (!gameBoard.validateSquareIsFree(playerOnesChoice)) {
+  //     startPlayersTurn("That square is already taken");
+  //   }
+
+  //   gameBoard.setMarker(playerOnesChoice, players[0].boardPiece);
+  //   let winResult = evaluateWin(players[0]);
+  //   evaluateGameEnd(winResult);
+  // };
+
+  // const startOpponentsTurn = () => {
+  //   currentPlayerTurn = players[1];
+  //   playerTwosChoice = opponentController.opponentsMove();
+  //   if (!gameBoard.validateSquareIsFree(playerTwosChoice)) {
+  //     startPlayersTurn("That square is already taken");
+  //   }
+  //   gameBoard.setMarker(playerTwosChoice, players[1].boardPiece);
+  //   let winResult = evaluateWin(players[1]);
+  //   evaluateGameEnd(winResult);
+  // };
 
   const evaluateWin = (player) => {
     const isItTheLastTurn = gameBoard.getNumberOfEmptySquares == 0 ? true : false;
@@ -260,7 +276,8 @@ const gameController = (function () {
 
   const evaluateGameEnd = (winResult) => {
     if (winResult == "") {
-      currentPlayerTurn === players[0] ? startOpponentsTurn() : startPlayersTurn();
+      currentPlayerTurn = currentPlayerTurn === players[0] ? players[1] : players[0];
+      startTurn();
     } else {
       alert(`${winResult}`);
     }
@@ -270,8 +287,7 @@ const gameController = (function () {
     evaluateWin,
     setupGame,
     players,
-    startPlayersTurn,
-    startOpponentsTurn,
+    startTurn,
   };
 })();
 
@@ -295,7 +311,7 @@ const opponentController = (function () {
 
 function gameTest() {
   gameController.setupGame();
-  gameController.startPlayersTurn();
+  gameController.startTurn();
 }
 
 gameTest();
