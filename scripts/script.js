@@ -78,6 +78,12 @@ const gameBoard = (function () {
     }
   }
 
+  const validateSquareIsFree = (squareNumberChosen) => {
+    const allFreeSquares = board.filter((square) => square.mark == null);
+    const findSquare = allFreeSquares.findIndex((sq) => sq.position.number == squareNumberChosen);
+    return findSquare == -1 ? false : true;
+  };
+
   const setMarker = (gridNumber, mark) => {
     board.find((square) => square.position.number == gridNumber).mark = mark;
   };
@@ -86,9 +92,14 @@ const gameBoard = (function () {
     board.filter((square) => square.mark == mark);
   };
 
+  const getEmptySquares = () => {
+    let allFreeSquares = board.filter((square) => square.mark == null);
+    return allFreeSquares;
+  };
+
   const getNumberOfEmptySquares = () => {
-    let x = board.filter((square) => square.mark == null);
-    return x.length;
+    let allFreeSquares = board.filter((square) => square.mark == null);
+    return allFreeSquares.length;
   };
 
   const confirmDiagonalMarkedSquares = (mark) => {
@@ -180,10 +191,50 @@ const gameBoard = (function () {
     testWinConR1,
     confirmDiagonalMarkedSquares,
     confirmStraightMarkedSquares,
+    validateSquareIsFree,
+    getEmptySquares,
   };
 })();
 
-const game = (function () {
+const gameController = (function () {
+  let players = [];
+  let currentPlayerTurn = players[0];
+
+  const setupGame = () => {
+    const name = prompt("Pick a name");
+    const mark = prompt("Pick a token of X or O");
+    players.push(createPlayer(name, mark));
+    players[0].increaseTurnNumber();
+    players[0].increaseTurnNumber();
+    players[0].increaseTurnNumber();
+    players.push(createPlayer("Player-2", players[0].boardPiece == "X" ? "O" : "X"));
+    currentPlayerTurn = players[0];
+  };
+
+  const startPlayersTurn = (promptMessage = "Choose a sq from 0-8") => {
+    currentPlayerTurn = players[0];
+    playerOnesChoice = prompt(promptMessage);
+
+    if (!gameBoard.validateSquareIsFree(playerOnesChoice)) {
+      startPlayersTurn("That square is already taken");
+    }
+
+    gameBoard.setMarker(playerOnesChoice, players[0].boardPiece);
+    let winResult = evaluateWin(players[0]);
+    evaluateGameEnd(winResult);
+  };
+
+  const startOpponentsTurn = () => {
+    currentPlayerTurn = players[1];
+    playerTwosChoice = opponentController.opponentsMove();
+    if (!gameBoard.validateSquareIsFree(playerTwosChoice)) {
+      startPlayersTurn("That square is already taken");
+    }
+    gameBoard.setMarker(playerTwosChoice, players[1].boardPiece);
+    let winResult = evaluateWin(players[1]);
+    evaluateGameEnd(winResult);
+  };
+
   const evaluateWin = (player) => {
     const isItTheLastTurn = gameBoard.getNumberOfEmptySquares == 0 ? true : false;
     const marker = player.boardPiece;
@@ -200,35 +251,51 @@ const game = (function () {
       return "win";
     }
 
-    return isItTheLastTurn ? "draw" : "";
+    if (isItTheLastTurn) {
+      return "draw";
+    } else {
+      return "";
+    }
+  };
+
+  const evaluateGameEnd = (winResult) => {
+    if (winResult == "") {
+      currentPlayerTurn === players[0] ? startOpponentsTurn() : startPlayersTurn();
+    } else {
+      alert(`${winResult}`);
+    }
   };
 
   return {
     evaluateWin,
+    setupGame,
+    players,
+    startPlayersTurn,
+    startOpponentsTurn,
   };
 })();
 
-const opponentsMove = (function () {
-  function pickASquare(gameBoard) {
-    const availableSquaresToPick = gameBoard.filter((square) => square.mark == null);
-    const maxSquares = availableSquaresToPick.length;
-    if (maxSquares == 1) {
-      return availableSquaresToPick;
+const opponentController = (function () {
+  const opponentsMove = () => {
+    emptySquares = gameBoard.getEmptySquares();
+    emptySquaresCount = gameBoard.getEmptySquares().length;
+    if (emptySquaresCount == 1) {
+      return emptySquares[0].position.number;
+    } else {
+      let randomNumber = Math.floor(Math.random() * (emptySquaresCount - 1 + 1) + 0);
+      let squareNumber = emptySquares[randomNumber].position.number;
+      return squareNumber;
     }
-    const squareNumberPick = Math.floor(Math.random() * (maxSquares - 0 + 1) + 0);
-    return availableSquaresToPick.find((square) => square.position.number == squareNumberPick);
-  }
+  };
 
-  return { pickASquare };
+  return {
+    opponentsMove,
+  };
 })();
 
 function gameTest() {
-  const jack = createPlayer("jack", "x");
-  gameBoard.testWinConC1("x");
-  jack.increaseTurnNumber();
-  jack.increaseTurnNumber();
-  jack.increaseTurnNumber();
-  game.evaluateWin(jack);
+  gameController.setupGame();
+  gameController.startPlayersTurn();
 }
 
 gameTest();
