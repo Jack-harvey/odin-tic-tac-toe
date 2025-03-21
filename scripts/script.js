@@ -275,4 +275,4 @@ function gameTest() {
   gameController.startTurn();
 }
 
-gameTest();
+//gameTest();

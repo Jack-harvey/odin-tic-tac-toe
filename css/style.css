@@ -1,1 +1,76 @@
 @import "modern-normalize.css";
+
+:root {
+  --text: black;
+  --player-1: red;
+  --player-2: blue;
+}
+
+body {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  flex-direction: column;
+}
+
+header {
+  height: 8rem;
+  background-color: lightgreen;
+  font-size: 3rem;
+  text-align: center;
+  align-content: center;
+}
+
+section.player-area {
+  height: 10rem;
+  background-color: lightpink;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10rem;
+}
+
+section.player-area > .player {
+  font-size: 2rem;
+}
+
+section.player-area > .player-one {
+  text-align: right;
+  .name {
+    color: var(--player-1);
+  }
+  .score {
+    text
+  }
+}
+section.player-area > .player-two {
+  text-align: left;
+  .name {
+    color: var(--player-2);
+  }
+}
+
+main {
+  margin: auto;
+}
+
+main > div.game-board {
+  min-width: 30rem;
+  min-height: 30rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.game-board > span.square {
+  background-color: beige;
+  border: 2px solid black;
+}
+
+div.tool-bar {
+  height: 5rem;
+  background-color: lightgoldenrodyellow;
+}
+
+footer {
+  height: 2rem;
+  background-color: lightblue;
+}
