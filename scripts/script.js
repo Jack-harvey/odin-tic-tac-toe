@@ -106,9 +106,11 @@ const gameBoard = (function () {
     const map = board.map((square) =>
       square.mark === null ? (square.consoleMark = "□") : (square.consoleMark = square.mark)
     );
+    console.log("-----------------------------------------");
     console.log(`${map[0]}${map[1]}${map[2]}`);
     console.log(`${map[3]}${map[4]}${map[5]}`);
     console.log(`${map[6]}${map[7]}${map[8]}`);
+    console.log("-----------------------------------------");
   };
 
   const test = () => {
@@ -134,9 +136,6 @@ const gameController = (function () {
     const name = prompt("Pick a name");
     const mark = prompt("Pick a token of X or O");
     players.push(createPlayer(name, mark));
-    players[0].increaseTurnNumber();
-    players[0].increaseTurnNumber();
-    players[0].increaseTurnNumber();
     players.push(createPlayer("Player-2", players[0].boardPiece == "X" ? "O" : "X"));
     currentPlayerTurn = players[0];
     gameBoard.printBoardToConsole();
@@ -154,45 +153,48 @@ const gameController = (function () {
     }
 
     gameBoard.setMarker(playersChoice, currentPlayerTurn.boardPiece);
+    currentPlayerTurn.increaseTurnNumber();
     gameBoard.printBoardToConsole();
     let winResult = evaluateWin(currentPlayerTurn);
     evaluateGameEnd(winResult);
   };
 
   const evaluateWin = (player) => {
+    let winResult = { result: "", player };
+
     const isItTheLastTurn = gameBoard.getNumberOfEmptySquares == 0 ? true : false;
     const marker = player.boardPiece;
 
     if (player.getTurnNumber() < 3) {
-      return "";
+      return winResult;
     }
 
     if (confirmDiagonalMarkedSquares(marker)) {
-      return "win";
+      winResult.result = "win";
     }
 
     if (confirmStraightMarkedSquares(marker)) {
-      return "win";
+      winResult.result = "win";
     }
 
     if (isItTheLastTurn) {
-      return "draw";
+      winResult.result = "draw";
     } else {
-      return "";
+      return winResult;
     }
   };
 
   const evaluateGameEnd = (winResult) => {
-    if (winResult == "") {
+    if (winResult.result == "") {
       currentPlayerTurn = currentPlayerTurn === players[0] ? players[1] : players[0];
       startTurn();
     } else {
-      alert(`${winResult}`);
+      alert(`${winResult.player.name} ${winResult.result}`);
     }
   };
 
   const confirmStraightMarkedSquares = (mark) => {
-    const NUMBEROFSQUARESTOWIN = 3;
+    const NUMEROFMARKSINAROW = 3;
     const getAllSquaresWithDefinedMark = gameBoard.getAllSquaresWithDefinedMark(mark);
 
     for (let index = 1; index < 4; index++) {
@@ -204,8 +206,8 @@ const gameController = (function () {
       );
 
       if (
-        numberOfMarksInCol.length == NUMBEROFSQUARESTOWIN ||
-        numberOfMarksInRow.length == NUMBEROFSQUARESTOWIN
+        numberOfMarksInCol.length == NUMEROFMARKSINAROW ||
+        numberOfMarksInRow.length == NUMEROFMARKSINAROW
       ) {
         return true;
       }
