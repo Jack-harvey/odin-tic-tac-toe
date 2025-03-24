@@ -84,9 +84,18 @@ main > div.game-board {
 div.tool-bar {
   height: 5rem;
   background-color: lightgoldenrodyellow;
+  display: grid;
+  grid-template-columns: 1fr, 1fr;
+  justify-content: center;
+
+  button {
+    margin-bottom: 1rem;
+  }
 }
 
 footer {
   height: 2rem;
   background-color: lightblue;
+  text-align: center;
+  padding: 8px;
 }
