@@ -24,28 +24,44 @@ header {
 section.player-area {
   height: 10rem;
   background-color: lightpink;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 8rem;
+  padding-top: 2rem;
+  flex: 0 1 auto;
 }
 
-section.player-area > .player {
+.player {
   font-size: 2rem;
+  width: 50%;
 }
 
-section.player-area > .player-one {
+.test {
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.player-one {
   text-align: right;
+  margin-left: auto;
   .name {
     color: var(--player-1);
+    flex: 1;
   }
   .score {
-    text
+    text-align: center;
   }
 }
-section.player-area > .player-two {
+.player-two {
   text-align: left;
   .name {
     color: var(--player-2);
+  }
+  .score {
+    text-align: center;
   }
 }
 
