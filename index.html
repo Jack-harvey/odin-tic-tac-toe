@@ -6,18 +6,19 @@
     <title>Tic Tac Toe</title>
     <link rel="stylesheet" href="css/style.css" />
     <script src="scripts/script.js" defer></script>
+    <script src="https://kit.fontawesome.com/fc2b7c1696.js" crossorigin="anonymous" defer></script>
   </head>
   <body>
     <header>Naughts and Crosses</header>
     <section class="player-area">
       <div class="player">
-        <div class="player-one test">
+        <div class="player-one player-layout">
           <div class="name">Player-1</div>
-          <div class="score">0</div>
+          <div class="score">234</div>
         </div>
       </div>
       <div class="player">
-        <div class="player-two test">
+        <div class="player-two player-layout">
           <div class="name">Pr-2</div>
           <div class="score">0</div>
         </div>
@@ -25,8 +26,12 @@
     </section>
     <main>
       <div class="game-board">
-        <span class="square" data-number="0">0</span>
-        <span class="square" data-number="1">1</span>
+        <span class="square" data-number="0">
+          <i class="fa-solid fa-o marker"></i>
+        </span>
+        <span class="square" data-number="1">
+          <i class="fa-solid fa-xmark marker"></i>
+        </span>
         <span class="square" data-number="2">2</span>
         <span class="square" data-number="3">3</span>
         <span class="square" data-number="4">4</span>
@@ -35,10 +40,47 @@
         <span class="square" data-number="7">7</span>
         <span class="square" data-number="8">8</span>
       </div>
+      <div class="tool-bar">
+        <button type="button"><i class="fa-solid fa-arrows-rotate"></i></button>
+      </div>
     </main>
-    <div class="tool-bar">
-      <button type="button">reset board</button>
-    </div>
     <footer>footer txt</footer>
+
+    <dialog id="createPlayer">
+      <div class="modal-content">
+        <div class="btn-container">
+          <button type="button" class="close-modal">
+            <img src="img/close-box.svg" class="close-modal" alt="" />
+          </button>
+        </div>
+        <form id="playerName" method="dialog">
+          <div>
+            <label for="playerName">Your name*</label>
+            <input type="text" id="playerName" name="playerName" placeholder="Player-1" required />
+          </div>
+
+          <fieldset>
+            <legend>choose your marker</legend>
+
+            <div>
+              <input type="checkbox" name="marker" id="x-marker" value="x" />
+              <label for="x-marker">X</label>
+            </div>
+
+            <div>
+              <input type="checkbox" name="marker" id="o-marker" value="o" />
+              <label for="o-marker">O</label>
+            </div>
+          </fieldset>
+
+          <div>
+            <label for="opponentName">Who challenges you?</label>
+            <input type="text" id="opponentName" name="opponentName" placeholder="Player-2" />
+          </div>
+
+          <button id="addBook" type="submit">Add Book</button>
+        </form>
+      </div>
+    </dialog>
   </body>
 </html>

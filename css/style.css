@@ -1,9 +1,11 @@
 @import "modern-normalize.css";
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap");
 
 :root {
   --text: black;
   --player-1: red;
   --player-2: blue;
+  --backgroundColor: white;
 }
 
 body {
@@ -14,30 +16,28 @@ body {
 }
 
 header {
-  height: 8rem;
-  background-color: lightgreen;
+  height: 6rem;
   font-size: 3rem;
   text-align: center;
   align-content: center;
 }
 
 section.player-area {
-  height: 10rem;
-  background-color: lightpink;
   display: flex;
   flex-direction: row;
   justify-content: center;
   gap: 8rem;
-  padding-top: 2rem;
+  padding: 0.5rem 0rem;
   flex: 0 1 auto;
 }
 
 .player {
   font-size: 2rem;
   width: 50%;
+  font-family: "Fira Code", monospace;
 }
 
-.test {
+.player-layout {
   width: fit-content;
   display: flex;
   flex-direction: column;
@@ -65,37 +65,63 @@ section.player-area {
   }
 }
 
+.score {
+  margin-top: 0.4rem;
+  font-size: 3rem;
+}
+
 main {
   margin: auto;
 }
 
 main > div.game-board {
-  min-width: 30rem;
-  min-height: 30rem;
+  width: 21rem;
+  height: 21rem;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
 }
 
 .game-board > span.square {
-  background-color: beige;
+  background-color: var(--backgroundColor);
   border: 2px solid black;
+  max-width: 7rem;
+  max-height: 7rem;
+  display: grid;
+  justify-content: center;
+  align-content: center;
 }
 
 div.tool-bar {
+  margin-top: 3rem;
   height: 5rem;
-  background-color: lightgoldenrodyellow;
+  background-color: var(--backgroundColor);
   display: grid;
   grid-template-columns: 1fr, 1fr;
   justify-content: center;
 
   button {
     margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 6px;
+    background-color: var(--backgroundColor);
   }
 }
 
 footer {
   height: 2rem;
-  background-color: lightblue;
   text-align: center;
   padding: 8px;
+}
+
+.marker {
+  font-size: 7rem;
+}
+
+.player-one-marker {
+  color: var(--player-1);
+}
+
+.player-one-marker {
+  color: var(--player-2);
 }
