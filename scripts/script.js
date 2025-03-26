@@ -275,4 +275,47 @@ function gameTest() {
   gameController.startTurn();
 }
 
+const modalController = (function () {
+  const newGameModal = document.querySelector("#createPlayer");
+
+  const createCloseEvent = () => {
+    document.querySelector(".close-modal").addEventListener("click", (e) => {
+      newGameModal.close();
+      newGameModal.reset();
+    });
+  };
+
+  const show = () => {
+    newGameModal.showModal();
+  };
+
+  return {
+    createCloseEvent,
+    show,
+  };
+})();
+
+const formController = (function () {
+  const getMark = () => {
+    let marker = [];
+    document.querySelectorAll('[type="checkbox"]').forEach((mark) => {
+      if (mark.checked === true) {
+        marker.push(mark.value);
+      }
+    });
+    return marker[0];
+  };
+
+  const submit = () => {
+    let playerName = document.getElementsByName("playerName")[0].value;
+    let opponentName = document.getElementsByName("opponentName")[0].value;
+    const playerMark = getMark();
+
+    return { playerName, playerMark, opponentName };
+  };
+})();
+
+modalController.show();
+modalController.createCloseEvent();
+
 //gameTest();
