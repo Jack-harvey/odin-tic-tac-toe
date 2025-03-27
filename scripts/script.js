@@ -313,9 +313,18 @@ const formController = (function () {
 
     return { playerName, playerMark, opponentName };
   };
+
+  return {
+    submit,
+  };
 })();
 
 modalController.show();
 modalController.createCloseEvent();
+
+let x = document.querySelector("#newGame");
+x.addEventListener("submit", (e) => {
+  const initialValues = formController.submit();
+});
 
 //gameTest();

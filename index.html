@@ -53,14 +53,18 @@
             <img src="img/close-box.svg" class="close-modal" alt="" />
           </button>
         </div>
-        <form id="playerName" method="dialog">
+        <form id="newGame" method="dialog">
           <div>
             <label for="playerName">Your name*</label>
             <input type="text" id="playerName" name="playerName" placeholder="Player-1" required />
           </div>
 
+          <div>
+            <label for="opponentName">Who challenges you?</label>
+            <input type="text" id="opponentName" name="opponentName" placeholder="Player-2" />
+          </div>
           <fieldset>
-            <legend>choose your marker</legend>
+            <legend>Choose your marker</legend>
 
             <div>
               <input type="checkbox" name="marker" id="x-marker" value="x" />
@@ -73,12 +77,7 @@
             </div>
           </fieldset>
 
-          <div>
-            <label for="opponentName">Who challenges you?</label>
-            <input type="text" id="opponentName" name="opponentName" placeholder="Player-2" />
-          </div>
-
-          <button id="addBook" type="submit">Add Book</button>
+          <button id="startGame" type="submit">Start Game</button>
         </form>
       </div>
     </dialog>

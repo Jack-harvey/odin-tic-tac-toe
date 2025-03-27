@@ -125,3 +125,73 @@ footer {
 .player-one-marker {
   color: var(--player-2);
 }
+
+dialog {
+  padding: 0px;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  margin: 0.5rem 2rem;
+}
+
+.btn-container {
+  margin-left: auto;
+  margin-bottom: 1rem;
+}
+
+button.close-modal {
+  width: 2rem;
+  height: 2rem;
+  padding: 0px;
+  background-color: white;
+  border: none;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form > div {
+  display: grid;
+  margin-bottom: 1rem;
+  input {
+    width: 40ch;
+    background-color: #e6e6e6;
+    border: none;
+    height: 2rem;
+    color: var(--text);
+    padding-left: 5px;
+    border-radius: 6px;
+    margin-top: 0.2rem;
+  }
+}
+
+form > div > label {
+  padding-left: 5px;
+}
+
+input:required:invalid,
+input:focus:invalid {
+  border: 2px solid red;
+}
+input:required:valid {
+  border: 2px solid green;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+#startGame {
+  padding: 0.75rem 5rem;
+  border-radius: 6px;
+  background-color: green;
+  color: white;
+  flex: 1;
+  margin: 1rem 0rem;
+}
