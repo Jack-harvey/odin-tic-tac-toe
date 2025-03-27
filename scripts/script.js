@@ -113,6 +113,10 @@ const gameBoard = (function () {
     console.log("-----------------------------------------");
   };
 
+  //set a square to a marker, color appropiratly
+
+  //if you click on an already marked square then display an error
+
   const test = () => {
     return board;
   };
@@ -270,11 +274,6 @@ const opponentController = (function () {
   };
 })();
 
-function gameTest() {
-  gameController.setupGame();
-  gameController.startTurn();
-}
-
 const modalController = (function () {
   const newGameModal = document.querySelector("#createPlayer");
 
@@ -327,4 +326,15 @@ x.addEventListener("submit", (e) => {
   const initialValues = formController.submit();
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const gameBoard = document.querySelector(".game-board");
+  gameBoard.addEventListener("click", (e) => {
+    console.log(e.target.closest(".square").dataset.number);
+  });
+});
+
+function gameTest() {
+  gameController.setupGame();
+  gameController.startTurn();
+}
 //gameTest();
