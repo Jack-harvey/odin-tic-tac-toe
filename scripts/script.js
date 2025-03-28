@@ -136,24 +136,24 @@ const gameController = (function () {
   let players = [];
   let currentPlayerTurn = players[0];
 
-  const setupGame = () => {
-    const name = prompt("Pick a name");
-    const mark = prompt("Pick a token of X or O");
+  const setupGame = (playerName, playerMark, opponentName = "Player-2") => {
+    const name = playerName;
+    const mark = playerMark;
     players.push(createPlayer(name, mark));
-    players.push(createPlayer("Player-2", players[0].boardPiece == "X" ? "O" : "X"));
+    players.push(createPlayer(opponentName, players[0].boardPiece == "X" ? "O" : "X"));
     currentPlayerTurn = players[0];
     gameBoard.printBoardToConsole();
   };
 
-  const startTurn = (promptMessage = "Choose a sq from 0-8") => {
+  const startTurn = (number = -1) => {
     if (currentPlayerTurn == players[0]) {
-      playersChoice = prompt(promptMessage);
+      playersChoice = number;
     } else {
       playersChoice = opponentController.opponentsMove();
     }
 
     if (!gameBoard.validateSquareIsFree(playersChoice)) {
-      startTurn("That square is already taken");
+      console.log("That square is already taken");
     }
 
     gameBoard.setMarker(playersChoice, currentPlayerTurn.boardPiece);
@@ -308,23 +308,36 @@ const formController = (function () {
   const submit = () => {
     let playerName = document.getElementsByName("playerName")[0].value;
     let opponentName = document.getElementsByName("opponentName")[0].value;
-    const playerMark = getMark();
+    const playerMark = getMark().toUpperCase();
 
     return { playerName, playerMark, opponentName };
   };
 
+  const CreateListnerForformSubmit = () => {
+    const form = document.querySelector("#newGame");
+    form.addEventListener("submit", (e) => {
+      const initialValues = formController.submit();
+      gameController.setupGame(
+        initialValues.playerName,
+        initialValues.playerMark,
+        initialValues.opponentName === "" ? "Player-2" : initialValues.opponentName
+      );
+    });
+  };
+
   return {
     submit,
+    CreateListnerForformSubmit,
   };
+})();
+
+const pageController = (function () {
+  return {};
 })();
 
 modalController.show();
 modalController.createCloseEvent();
-
-let x = document.querySelector("#newGame");
-x.addEventListener("submit", (e) => {
-  const initialValues = formController.submit();
-});
+formController.CreateListnerForformSubmit();
 
 document.addEventListener("DOMContentLoaded", () => {
   const gameBoard = document.querySelector(".game-board");
