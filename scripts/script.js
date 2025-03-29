@@ -113,6 +113,22 @@ const gameBoard = (function () {
     console.log("-----------------------------------------");
   };
 
+  const renderBoardToPage = () => {
+    //define color, and mark, and square
+    board.forEach((square) => {
+      if (square.mark === null) {
+        return;
+      }
+      var squareOnPage = document.querySelector(`[data-number="${square.position.number}"]`);
+      if (square.mark === "X") {
+        squareOnPage.innerHTML = '<i class="fa-solid fa-xmark marker"></i>';
+      }
+      if (square.mark === "O") {
+        squareOnPage.innerHTML = '<i class="fa-solid fa-o marker"></i>';
+      }
+    });
+  };
+
   //set a square to a marker, color appropiratly
 
   //if you click on an already marked square then display an error
@@ -129,6 +145,7 @@ const gameBoard = (function () {
     getEmptySquares,
     test,
     printBoardToConsole,
+    renderBoardToPage,
   };
 })();
 
@@ -142,10 +159,12 @@ const gameController = (function () {
     players.push(createPlayer(name, mark));
     players.push(createPlayer(opponentName, players[0].boardPiece == "X" ? "O" : "X"));
     currentPlayerTurn = players[0];
-    gameBoard.printBoardToConsole();
+    gameBoard.renderBoardToPage();
   };
 
-  const startTurn = (number = -1) => {
+  // start turn (player, number) do the stuff;
+  //jump in here, decide if it's players turn, because if it is we need to wait for a click. if not it's oppo
+  const startTurn = (number) => {
     if (currentPlayerTurn == players[0]) {
       playersChoice = number;
     } else {
@@ -158,7 +177,7 @@ const gameController = (function () {
 
     gameBoard.setMarker(playersChoice, currentPlayerTurn.boardPiece);
     currentPlayerTurn.increaseTurnNumber();
-    gameBoard.printBoardToConsole();
+    gameBoard.renderBoardToPage();
     let winResult = evaluateWin(currentPlayerTurn);
     evaluateGameEnd(winResult);
   };
@@ -191,6 +210,9 @@ const gameController = (function () {
   const evaluateGameEnd = (winResult) => {
     if (winResult.result == "") {
       currentPlayerTurn = currentPlayerTurn === players[0] ? players[1] : players[0];
+      if (currentPlayerTurn === players[0]) {
+        return;
+      }
       startTurn();
     } else {
       alert(`${winResult.player.name} ${winResult.result}`);
@@ -342,7 +364,7 @@ formController.CreateListnerForformSubmit();
 document.addEventListener("DOMContentLoaded", () => {
   const gameBoard = document.querySelector(".game-board");
   gameBoard.addEventListener("click", (e) => {
-    console.log(e.target.closest(".square").dataset.number);
+    gameController.startTurn(e.target.closest(".square").dataset.number);
   });
 });
 
