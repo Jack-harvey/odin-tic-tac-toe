@@ -116,19 +116,23 @@ const gameBoard = (function () {
   const renderBoardToPage = () => {
     //define color, and mark, and square
     board.forEach((square) => {
+      const squareOnPage = document.querySelector(`[data-number="${square.position.number}"]`);
       if (square.mark === null) {
-        return;
-      }
-      var squareOnPage = document.querySelector(`[data-number="${square.position.number}"]`);
-      if (square.mark === "X") {
+        squareOnPage.innerHTML = "";
+      } else if (square.mark === "X") {
         squareOnPage.innerHTML = '<i class="fa-solid fa-xmark marker"></i>';
-      }
-      if (square.mark === "O") {
+      } else {
         squareOnPage.innerHTML = '<i class="fa-solid fa-o marker"></i>';
       }
     });
   };
 
+  const clearBoardOfAllMarks = () => {
+    board.forEach((square) => {
+      square.mark = null;
+    });
+    renderBoardToPage();
+  };
   //set a square to a marker, color appropiratly
 
   //if you click on an already marked square then display an error
@@ -146,6 +150,7 @@ const gameBoard = (function () {
     test,
     printBoardToConsole,
     renderBoardToPage,
+    clearBoardOfAllMarks,
   };
 })();
 
@@ -153,7 +158,7 @@ const gameController = (function () {
   let players = [];
   let currentPlayerTurn = players[0];
 
-  const setupGame = (playerName, playerMark, opponentName = "Player-2") => {
+  const setupGame = (playerName = "Player-1", playerMark = "X", opponentName = "Player-2") => {
     const name = playerName;
     const mark = playerMark;
     players.push(createPlayer(name, mark));
@@ -193,10 +198,12 @@ const gameController = (function () {
     }
 
     if (confirmDiagonalMarkedSquares(marker)) {
+      winResult.player.increaseScore();
       winResult.result = "win";
     }
 
     if (confirmStraightMarkedSquares(marker)) {
+      winResult.player.increaseScore();
       winResult.result = "win";
     }
 
@@ -215,8 +222,20 @@ const gameController = (function () {
       }
       startTurn();
     } else {
-      alert(`${winResult.player.name} ${winResult.result}`);
+      announceWinner(winResult);
     }
+  };
+
+  const announceWinner = (winResult) => {
+    const name = winResult.player.name;
+    const result = winResult.result;
+    const playerNumber = players.findIndex((player) => player.name === winResult.player.name) + 1;
+    const playerScoreSelector = playerNumber === 1 ? ".player-one>.score" : ".player-two>.score";
+    const score = winResult.player.getScore();
+
+    const playerScoreDiv = document.querySelector(playerScoreSelector);
+    playerScoreDiv.innerHTML = score;
+    alert(`${name} ${result}`);
   };
 
   const confirmStraightMarkedSquares = (mark) => {
@@ -324,12 +343,12 @@ const formController = (function () {
         marker.push(mark.value);
       }
     });
-    return marker[0];
+    return marker.length === 0 ? "X" : marker[0];
   };
 
   const submit = () => {
-    let playerName = document.getElementsByName("playerName")[0].value;
-    let opponentName = document.getElementsByName("opponentName")[0].value;
+    const playerName = document.getElementsByName("playerName")[0].value;
+    const opponentName = document.getElementsByName("opponentName")[0].value;
     const playerMark = getMark().toUpperCase();
 
     return { playerName, playerMark, opponentName };
@@ -340,7 +359,7 @@ const formController = (function () {
     form.addEventListener("submit", (e) => {
       const initialValues = formController.submit();
       gameController.setupGame(
-        initialValues.playerName,
+        initialValues.playerName === "" ? "Player-1" : initialValues.playerName,
         initialValues.playerMark,
         initialValues.opponentName === "" ? "Player-2" : initialValues.opponentName
       );
