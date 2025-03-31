@@ -195,3 +195,17 @@ button:hover {
   flex: 1;
   margin: 1rem 0rem;
 }
+
+.message {
+  align-self: center;
+  width: 50ch;
+  background-color: rgb(163, 228, 163);
+  border-radius: 6px;
+  margin-top: 4rem;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.error {
+  background-color: rgb(240, 140, 140);
+}

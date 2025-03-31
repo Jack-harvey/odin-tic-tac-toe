@@ -372,6 +372,18 @@ const formController = (function () {
   };
 })();
 
+const textController = (function () {
+  const messageBox = document.querySelector(".message>.text");
+
+  const writeMessage = (text) => {
+    messageBox.innerHTML = text;
+  };
+
+  return {
+    writeMessage,
+  };
+})();
+
 const pageController = (function () {
   return {};
 })();
