@@ -102,19 +102,7 @@ const gameBoard = (function () {
     return allFreeSquares.length;
   };
 
-  const printBoardToConsole = () => {
-    const map = board.map((square) =>
-      square.mark === null ? (square.consoleMark = "□") : (square.consoleMark = square.mark)
-    );
-    console.log("-----------------------------------------");
-    console.log(`${map[0]}${map[1]}${map[2]}`);
-    console.log(`${map[3]}${map[4]}${map[5]}`);
-    console.log(`${map[6]}${map[7]}${map[8]}`);
-    console.log("-----------------------------------------");
-  };
-
   const renderBoardToPage = () => {
-    //define color, and mark, and square
     board.forEach((square) => {
       const squareOnPage = document.querySelector(`[data-number="${square.position.number}"]`);
       if (square.mark === null) {
@@ -133,12 +121,12 @@ const gameBoard = (function () {
     });
     renderBoardToPage();
   };
-  //set a square to a marker, color appropiratly
 
-  //if you click on an already marked square then display an error
-
-  const test = () => {
-    return board;
+  const addEventListenerToBoard = () => {
+    const gameBoard = document.querySelector(".game-board");
+    gameBoard.addEventListener("click", (e) => {
+      gameController.startTurn(e.target.closest(".square").dataset.number);
+    });
   };
 
   return {
@@ -147,10 +135,9 @@ const gameBoard = (function () {
     getNumberOfEmptySquares,
     validateSquareIsFree,
     getEmptySquares,
-    test,
-    printBoardToConsole,
     renderBoardToPage,
     clearBoardOfAllMarks,
+    addEventListenerToBoard,
   };
 })();
 
@@ -158,7 +145,7 @@ const gameController = (function () {
   let players = [];
   let currentPlayerTurn = players[0];
 
-  const setupGame = (playerName = "Player-1", playerMark = "X", opponentName = "Player-2") => {
+  const setupGame = (playerName, playerMark, opponentName) => {
     const name = playerName;
     const mark = playerMark;
     players.push(createPlayer(name, mark));
@@ -167,8 +154,6 @@ const gameController = (function () {
     gameBoard.renderBoardToPage();
   };
 
-  // start turn (player, number) do the stuff;
-  //jump in here, decide if it's players turn, because if it is we need to wait for a click. if not it's oppo
   const startTurn = (number) => {
     if (currentPlayerTurn == players[0]) {
       playersChoice = number;
@@ -177,7 +162,7 @@ const gameController = (function () {
     }
 
     if (!gameBoard.validateSquareIsFree(playersChoice)) {
-      console.log("That square is already taken");
+      textController.writeMessage("That square is already taken");
     }
 
     gameBoard.setMarker(playersChoice, currentPlayerTurn.boardPiece);
@@ -190,7 +175,7 @@ const gameController = (function () {
   const evaluateWin = (player) => {
     let winResult = { result: "", player };
 
-    const isItTheLastTurn = gameBoard.getNumberOfEmptySquares == 0 ? true : false;
+    const isItTheLastTurn = gameBoard.getNumberOfEmptySquares() == 0 ? true : false;
     const marker = player.boardPiece;
 
     if (player.getTurnNumber() < 3) {
@@ -209,9 +194,8 @@ const gameController = (function () {
 
     if (isItTheLastTurn) {
       winResult.result = "draw";
-    } else {
-      return winResult;
     }
+    return winResult;
   };
 
   const evaluateGameEnd = (winResult) => {
@@ -235,7 +219,7 @@ const gameController = (function () {
 
     const playerScoreDiv = document.querySelector(playerScoreSelector);
     playerScoreDiv.innerHTML = score;
-    alert(`${name} ${result}`);
+    textController.writeMessage(`${name} ${result}`);
   };
 
   const confirmStraightMarkedSquares = (mark) => {
@@ -388,19 +372,9 @@ const pageController = (function () {
   return {};
 })();
 
-modalController.show();
-modalController.createCloseEvent();
-formController.CreateListnerForformSubmit();
-
 document.addEventListener("DOMContentLoaded", () => {
-  const gameBoard = document.querySelector(".game-board");
-  gameBoard.addEventListener("click", (e) => {
-    gameController.startTurn(e.target.closest(".square").dataset.number);
-  });
+  gameBoard.addEventListenerToBoard();
+  modalController.show();
+  modalController.createCloseEvent();
+  formController.CreateListnerForformSubmit();
 });
-
-function gameTest() {
-  gameController.setupGame();
-  gameController.startTurn();
-}
-//gameTest();
