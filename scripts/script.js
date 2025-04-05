@@ -5,6 +5,9 @@ function createPlayer(name, boardPiece) {
   const getTurnNumber = () => turnNumber;
   const increaseScore = () => score++;
   const getScore = () => score;
+  const resetTurnNumber = () => {
+    turnNumber = 0;
+  }
 
   return {
     name,
@@ -13,6 +16,7 @@ function createPlayer(name, boardPiece) {
     getTurnNumber,
     increaseScore,
     getScore,
+    resetTurnNumber,
   };
 }
 
@@ -151,6 +155,7 @@ const gameController = (function () {
     players.push(createPlayer(name, mark));
     players.push(createPlayer(opponentName, players[0].boardPiece == "X" ? "O" : "X"));
     currentPlayerTurn = players[0];
+    updatePlayersNames(players)
     gameBoard.renderBoardToPage();
   };
 
@@ -161,8 +166,9 @@ const gameController = (function () {
       playersChoice = opponentController.opponentsMove();
     }
 
-    if (!gameBoard.validateSquareIsFree(playersChoice)) {
-      textController.writeMessage("That square is already taken");
+    if (gameBoard.validateSquareIsFree(playersChoice) === false) {
+      textController.writeMessage("That square is already taken", "warning");
+      return;
     }
 
     gameBoard.setMarker(playersChoice, currentPlayerTurn.boardPiece);
@@ -273,11 +279,48 @@ const gameController = (function () {
     return false;
   };
 
+  const startNextGame = (msg = "A new game has started, good luck!") => {
+    gameBoard.clearBoardOfAllMarks();
+    players.forEach(player => {
+      player.resetTurnNumber();
+    });
+    textController.writeMessage(msg)
+  };
+
+  const createStartNextGameEventListener = () => {
+    const resetButton = document.querySelector(".tool-bar>button");
+
+    resetButton.addEventListener("click", () => {
+
+      startNextGame();
+
+    });
+
+
+
+
+
+  };
+
+
+  const updatePlayersNames = (players) => {
+
+    playerOneNameEl = document.querySelector(".player-one>.name")
+    playerTwoNameEl = document.querySelector(".player-two>.name")
+
+    playerOneNameEl.innerHTML = players[0].name
+    playerTwoNameEl.innerHTML = players[1].name
+
+
+
+  };
+
   return {
     setupGame,
     evaluateWin,
     startTurn,
     players,
+    createStartNextGameEventListener,
   };
 })();
 
@@ -357,10 +400,14 @@ const formController = (function () {
 })();
 
 const textController = (function () {
-  const messageBox = document.querySelector(".message>.text");
+  const messageBoxText = document.querySelector(".message>.text");
+  const messageBox = document.querySelector(".message");
 
-  const writeMessage = (text) => {
-    messageBox.innerHTML = text;
+  const writeMessage = (text, type = "message") => {
+    messageBox.classList.remove("warning");
+
+    messageBox.classList.add(`${type}`);
+    messageBoxText.innerHTML = text;
   };
 
   return {
@@ -377,4 +424,5 @@ document.addEventListener("DOMContentLoaded", () => {
   modalController.show();
   modalController.createCloseEvent();
   formController.CreateListnerForformSubmit();
+  gameController.createStartNextGameEventListener();
 });
