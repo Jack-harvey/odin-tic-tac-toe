@@ -199,7 +199,7 @@ const gameController = (function () {
       winResult.result = "win";
     }
 
-    if (isItTheLastTurn) {
+    if (isItTheLastTurn && winResult.result === "") {
       winResult.result = "draw";
     }
     return winResult;
@@ -228,8 +228,9 @@ const gameController = (function () {
     playerScoreDiv.innerHTML = score;
     if (result === "draw") {
       textController.writeMessage(`Both players have come to a draw`);
+    } else {
+      textController.writeMessage(`${name} takes the ${result}`);
     }
-    textController.writeMessage(`${name} takes the ${result}`);
   };
 
   const confirmStraightMarkedSquares = (mark) => {
