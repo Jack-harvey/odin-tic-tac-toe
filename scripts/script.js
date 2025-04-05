@@ -7,7 +7,7 @@ function createPlayer(name, boardPiece) {
   const getScore = () => score;
   const resetTurnNumber = () => {
     turnNumber = 0;
-  }
+  };
 
   return {
     name,
@@ -129,6 +129,7 @@ const gameBoard = (function () {
   const addEventListenerToBoard = () => {
     const gameBoard = document.querySelector(".game-board");
     gameBoard.addEventListener("click", (e) => {
+      textController.writeMessage("");
       gameController.startTurn(e.target.closest(".square").dataset.number);
     });
   };
@@ -155,7 +156,7 @@ const gameController = (function () {
     players.push(createPlayer(name, mark));
     players.push(createPlayer(opponentName, players[0].boardPiece == "X" ? "O" : "X"));
     currentPlayerTurn = players[0];
-    updatePlayersNames(players)
+    updatePlayersNames(players);
     gameBoard.renderBoardToPage();
   };
 
@@ -225,7 +226,10 @@ const gameController = (function () {
 
     const playerScoreDiv = document.querySelector(playerScoreSelector);
     playerScoreDiv.innerHTML = score;
-    textController.writeMessage(`${name} ${result}`);
+    if (result === "draw") {
+      textController.writeMessage(`Both players have come to a draw`);
+    }
+    textController.writeMessage(`${name} takes the ${result}`);
   };
 
   const confirmStraightMarkedSquares = (mark) => {
@@ -281,38 +285,26 @@ const gameController = (function () {
 
   const startNextGame = (msg = "A new game has started, good luck!") => {
     gameBoard.clearBoardOfAllMarks();
-    players.forEach(player => {
+    players.forEach((player) => {
       player.resetTurnNumber();
     });
-    textController.writeMessage(msg)
+    textController.writeMessage(msg);
   };
 
   const createStartNextGameEventListener = () => {
     const resetButton = document.querySelector(".tool-bar>button");
 
     resetButton.addEventListener("click", () => {
-
       startNextGame();
-
     });
-
-
-
-
-
   };
 
-
   const updatePlayersNames = (players) => {
+    playerOneNameEl = document.querySelector(".player-one>.name");
+    playerTwoNameEl = document.querySelector(".player-two>.name");
 
-    playerOneNameEl = document.querySelector(".player-one>.name")
-    playerTwoNameEl = document.querySelector(".player-two>.name")
-
-    playerOneNameEl.innerHTML = players[0].name
-    playerTwoNameEl.innerHTML = players[1].name
-
-
-
+    playerOneNameEl.innerHTML = players[0].name;
+    playerTwoNameEl.innerHTML = players[1].name;
   };
 
   return {
@@ -404,6 +396,14 @@ const textController = (function () {
   const messageBox = document.querySelector(".message");
 
   const writeMessage = (text, type = "message") => {
+    if (text === "") {
+      messageBox.style.opacity = "0";
+      messageBox.style.transition = "opacity 1s ease";
+      return;
+    } else {
+      messageBox.style.opacity = "1";
+      messageBox.style.transition = "opacity 1s ease";
+    }
     messageBox.classList.remove("warning");
 
     messageBox.classList.add(`${type}`);

@@ -3,9 +3,12 @@
 
 :root {
   --text: black;
-  --player-1: red;
-  --player-2: blue;
+  --player-1: rgb(19, 116, 161);
+  --player-2: rgb(127, 31, 190);
   --backgroundColor: white;
+  --warning: rgb(240, 140, 140);
+  --valid: rgb(163, 228, 163);
+  --grey: rgb(82, 85, 99);
 }
 
 body {
@@ -105,13 +108,24 @@ div.tool-bar {
     padding: 1rem;
     border-radius: 6px;
     background-color: var(--backgroundColor);
+    height: 3rem;
+    width: 6rem;
+    display: flex;
+    justify-content: center;
+    background-color: var(--warning);
   }
+}
+
+.fa-arrows-rotate {
+  align-self: center;
 }
 
 footer {
   height: 2rem;
   text-align: center;
   padding: 8px;
+  background-color: var(--grey);
+  color: var(--backgroundColor);
 }
 
 .marker {
@@ -197,15 +211,17 @@ button:hover {
 }
 
 .message {
+  opacity: 0;
   align-self: center;
+  height: 3rem;
   width: 50ch;
-  background-color: rgb(163, 228, 163);
+  background-color: var(--valid);
   border-radius: 6px;
-  margin-top: 4rem;
+  margin-top: 3rem;
   padding: 0.5rem;
   text-align: center;
 }
 
-.error {
-  background-color: rgb(240, 140, 140);
+.warning {
+  background-color: var(--warning);
 }
