@@ -285,6 +285,7 @@ const gameController = (function () {
   };
 
   const startNextGame = (msg = "A new game has started, good luck!") => {
+    currentPlayerTurn = players[0];
     gameBoard.clearBoardOfAllMarks();
     players.forEach((player) => {
       player.resetTurnNumber();
